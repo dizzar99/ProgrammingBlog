@@ -1,0 +1,11 @@
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.DataAccess.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.csprojAssemblyReference.cache
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.AssemblyInfo.cs
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.Services.deps.json
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.Services.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.Services.pdb
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.DataAccess.pdb
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.csproj.CopyComplete
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.pdb
