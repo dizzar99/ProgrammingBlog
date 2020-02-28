@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProgBlog.Services.Models.ArticleManagment
+namespace ProgBlog.Services.Models.CommentManagment
 {
-    class Comment
+    public class Comment
     {
+        public string Id { get; set; }
+        public string Text { get; set; }
+        public string AuthorId { get; set; }
+        public string ParentCommentId { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

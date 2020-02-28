@@ -29,7 +29,7 @@ namespace ProgramminBlog.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<DbTest> Get()
+        public string Get()
         {
             //var dbValue = new DbValue
             //{
@@ -54,7 +54,7 @@ namespace ProgramminBlog.Controllers
 
             //context.Tests.InsertOne(dbTest);
 
-            return context.Tests.Find(d => true).ToList();
+            return "Hello";
         }
     }
 }

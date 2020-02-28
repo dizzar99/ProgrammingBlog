@@ -6,12 +6,12 @@ namespace ProgBlog.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserListItem>> GetUsers();
-        Task<UserDetails> GetUser(string userId);
-        Task<UserDetails> CreateUser(CreateUserRequest user);
-        Task<UserDetails> UpdateUser(string id, UpdateUserRequest user);
-        Task Remove(string id);
-        Task AddArticlesToUser(string userId, IEnumerable<string> articleId);
-        Task RemoveArticlesFromUser(string userId, IEnumerable<string> articleId);
+        Task<IEnumerable<UserListItem>> GetUsersAsync();
+        Task<UserDetails> GetUserAsync(string userId);
+        Task<UserDetails> CreateUserAsync(CreateUserRequest user);
+        Task<UserDetails> UpdateUserAsync(string id, UpdateUserRequest user);
+        Task DeleteUserAsync(string id);
+        Task AddArticlesToUserAsync(UserDetails user, IEnumerable<string> articleId);
+        Task RemoveArticlesFromUserAsync(UserDetails user, IEnumerable<string> articleId);
     }
 }

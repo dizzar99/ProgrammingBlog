@@ -4,8 +4,9 @@ using System.Text;
 
 namespace ProgBlog.Services.Models.UserManagment
 {
-    public class UpdateUserRequest : CreateUserRequest
+    public class UpdateUserRequest
     {
-        public IList<string> Articles { get; set; }
+        public string Login { get; set; }
+        public string Email { get; set; }
     }
 }

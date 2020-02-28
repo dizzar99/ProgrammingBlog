@@ -19,39 +19,38 @@ namespace ProgramminBlog.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<IEnumerable<UserListItem>> Get()
+        public async Task<IEnumerable<UserListItem>> GetUsers()
         {
-            return await this.userService.GetUsers();
+            return await this.userService.GetUsersAsync();
         }
 
-        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<UserListItem> Get(string id)
+        public async Task<UserDetails> GetUser(string id)
         {
-            return await this.userService.GetUser(id);
+            return await this.userService.GetUserAsync(id);
         }
 
         // POST: api/Users
         [HttpPost]
-        public async Task<UserListItem> CreateUser(CreateUserRequest user)
+        public async Task<UserDetails> CreateUser(CreateUserRequest user)
         {
-            var created = await this.userService.CreateUser(user);
+            var created = await this.userService.CreateUserAsync(user);
             return created;
         }
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<UserListItem> Put(string id, [FromBody] UpdateUserRequest user)
+        public async Task<UserListItem> UpdateUser (string id, [FromBody] UpdateUserRequest user)
         {
-            var updated = await this.userService.UpdateUser(id, user);
+            var updated = await this.userService.UpdateUserAsync(id, user);
             return updated;
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public async Task Delete(string id)
+        public async Task DeleteUser(string id)
         {
-            await this.userService.Remove(id);
+            await this.userService.DeleteUserAsync(id);
         }
     }
 }

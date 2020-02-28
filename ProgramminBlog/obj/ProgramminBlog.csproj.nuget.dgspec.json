@@ -41,6 +41,14 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[2.10.2, )"
@@ -111,6 +119,10 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[8.6.1, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
@@ -176,6 +188,10 @@
       "frameworks": {
         "netcoreapp3.0": {
           "dependencies": {
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[8.6.1, )"
+            },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
               "version": "[3.0.0, )"

@@ -11,7 +11,9 @@ namespace ProgBlog.Services.Mapper
         {
             var mappingConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MapperProfile());
+                mc.AddProfile<ArticleManagmentMapper>();
+                mc.AddProfile<UserManagmentMapper>();
+                mc.AddProfile<CommentManagmentMapper>();
             });
 
             var mapper = mappingConfig.CreateMapper();

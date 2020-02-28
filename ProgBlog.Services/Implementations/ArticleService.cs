@@ -2,13 +2,12 @@
 using MongoDB.Driver;
 using ProgBlog.DataAccess;
 using ProgBlog.DataAccess.Models;
+using ProgBlog.Services.Exceptions.ArticleServiceExceptions;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.ArticleManagment;
-using ProgBlog.Services.Models.UserManagment;
-using System;
+using ProgBlog.Services.Models.CommentManagment;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProgBlog.Services.Implementations
@@ -24,46 +23,150 @@ namespace ProgBlog.Services.Implementations
             this.mapper = mapper;
         }
 
-        public async Task<ArticleDetails> CreateArticle(CreateArticleRequest created)
+
+        public async Task<ArticleDetails> CreateArticleAsync(CreateArticleRequest created)
         {
             var dbArticle = this.mapper.Map<DbArticle>(created);
+            this.CheckCreateArticleConflicts(dbArticle);
+
+            dbArticle.Comments = new List<DbComment>();
             await this.context.Articles.InsertOneAsync(dbArticle);
 
             return this.mapper.Map<ArticleDetails>(dbArticle);
         }
 
-        public async Task<ArticleDetails> GetArticle(string articleId)
+        public async Task<Comment> AddCommentAsync(string articleId, CreateCommentRequest comment)
         {
-            var articles = await this.context.Articles.FindAsync(a => a.Id == articleId);
-            return this.mapper.Map<ArticleDetails>(articles.First());
+            var dbComment = this.mapper.Map<DbComment>(comment);
+            dbComment.Children = new List<string>();
+            if (!string.IsNullOrEmpty(dbComment.ParentCommentId))
+            {
+                try
+                {
+                    var parentComment = await this.GetComment(articleId, dbComment.ParentCommentId);
+                }
+                catch (CommentNotFoundException e)
+                {
+                    throw new CommentNotFoundException("Incorrect ParentCommentId. " + e.Message);
+                }
+            }
+
+            var article = await this.GetDbArticle(articleId);
+
+            article.Comments.Add(dbComment);
+            await this.context.Articles.FindOneAndReplaceAsync(a => a.Id == articleId, article);
+
+            return this.mapper.Map<Comment>(dbComment);
         }
 
-        public async Task<IEnumerable<ArticleListItem>> GetArticles(int count)
+        public async Task<DbComment> GetComment(string articleId, string commentId)
         {
-            var articles = this.context.Articles.AsQueryable().Reverse().Take(count).ToArray();
-            var result = this.mapper.Map<DbArticle[], IEnumerable<ArticleListItem>>(articles);
+            var article = await this.GetDbArticle(articleId);
+
+
+            var comment = article.Comments.FirstOrDefault(c => c.Id == commentId);
+            if (comment is null)
+            {
+                throw new CommentNotFoundException();
+            }
+
+            return comment;
+        }
+
+        public async Task<ArticleDetails> GetArticleAsync(string articleId)
+        {
+            var article = await this.GetDbArticle(articleId);
+            var articleDetails = this.mapper.Map<ArticleDetails>(article);
+
+            return articleDetails;
+        }
+
+        public async Task<IEnumerable<ArticleListItem>> GetArticlesAsync()
+        {
+            var articles = this.context.Articles.Find(a => true).ToEnumerable();
+            var result = this.mapper.Map<IEnumerable<DbArticle>, IEnumerable<ArticleListItem>>(articles);
             return await Task.FromResult(result);
         }
 
-        public async Task<IEnumerable<ArticleListItem>> GetArticles(IList<string> ids)
+        public async Task<IEnumerable<ArticleListItem>> GetArticlesAsync(IList<string> ids)
         {
             var articles = await this.context.Articles.FindAsync(d => ids.Contains(d.Id));
             return this.mapper.Map<DbArticle[], IEnumerable<ArticleListItem>>(articles.ToEnumerable().ToArray());
         }
 
-        public async Task Remove(string articleId)
+        public async Task DeleteArticleAsync(string articleId)
         {
-            var article = await this.context.Articles.FindOneAndDeleteAsync(a => a.Id == articleId);
+            var result = await this.context.Articles.DeleteOneAsync(a => a.Id == articleId);
+            if (result.DeletedCount == 0)
+            {
+                throw new ArticleNotFoundException();
+            }
         }
 
-        public async Task<ArticleDetails> UpdateArticle(string articleId, UpdateArticleRequest updateArticle)
+        public async Task DeleteCommentAsync(string articleId, string commentId)
         {
-            var articleCursor = await this.context.Articles.FindAsync(a => a.Id == articleId);
-            var article = articleCursor.First();
+            var article = await this.GetDbArticle(articleId);
+
+            var toDeleteComment = article.Comments.FirstOrDefault(c => c.Id == commentId);
+            if (toDeleteComment is null)
+            {
+                throw new CommentNotFoundException();
+            }
+
+            article.Comments.Remove(toDeleteComment);
+            await this.context.Articles.FindOneAndReplaceAsync(a => a.Id == articleId, article);
+        }
+
+        public async Task<ArticleDetails> UpdateArticleAsync(string articleId, UpdateArticleRequest updateArticle)
+        {
+            var article = await this.GetDbArticle(articleId);
             this.mapper.Map(updateArticle, article);
+            await this.CheckUpdateArticleConflicts(article);
             await this.context.Articles.FindOneAndReplaceAsync(a => a.Id == articleId, article);
 
             return this.mapper.Map<ArticleDetails>(article);
+        }
+
+        public async Task<Comment> UpdateCommentAsync(string articleId, string commentId, UpdateCommentRequest updateComment)
+        {
+            var article = await this.GetDbArticle(articleId);
+
+            var comment = article.Comments.FirstOrDefault(c => c.Id == commentId);
+            if (comment is null)
+            {
+                throw new CommentNotFoundException();
+            }
+
+            this.mapper.Map(updateComment, comment);
+            await this.context.Articles.FindOneAndReplaceAsync(a => a.Id == articleId, article);
+
+            return this.mapper.Map<Comment>(comment);
+        }
+
+        private async Task<DbArticle> GetDbArticle(string articleId)
+        {
+            var articleCursor = await this.context.Articles.FindAsync(a => a.Id == articleId);
+            var article = articleCursor.FirstOrDefault();
+
+            return article ?? throw new ArticleNotFoundException();
+        }
+
+        private void CheckCreateArticleConflicts(DbArticle article)
+        {
+            if (this.context.Articles.CountDocuments(a => a.Title == article.Title) > 0)
+            {
+                throw new ArticleTitleConflictException();
+            }
+        }
+
+        private async Task CheckUpdateArticleConflicts(DbArticle article)
+        {
+            var articlesCursor = await this.context.Articles.FindAsync(a => a.Title == article.Title && a.Id != article.Id);
+            var articlesWithSameTitle = articlesCursor.ToList();
+            if (articlesWithSameTitle.Count > 0)
+            {
+                throw new ArticleTitleConflictException();
+            }
         }
     }
 }

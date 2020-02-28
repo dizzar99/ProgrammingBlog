@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +21,9 @@ using ProgBlog.DataAccess.Models;
 using ProgBlog.Services.Implementations;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Mapper;
+using ProgBlog.Services.Models.ArticleManagment;
+using ProgBlog.Services.Models.UserManagment;
+using ProgramminBlog.Middlewares;
 
 namespace ProgramminBlog
 {
@@ -45,16 +50,15 @@ namespace ProgramminBlog
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IArticleService, ArticleService>();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(opt => opt.RegisterValidatorsFromAssemblyContaining<CreateArticleRequest>());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             //app.UseHttpsRedirection();
 

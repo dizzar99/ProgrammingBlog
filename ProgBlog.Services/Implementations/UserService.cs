@@ -2,13 +2,12 @@
 using MongoDB.Driver;
 using ProgBlog.DataAccess;
 using ProgBlog.DataAccess.Models;
+using ProgBlog.Services.Exceptions.UserServiceExceptions;
 using ProgBlog.Services.Interfaces;
-using ProgBlog.Services.Models;
+using ProgBlog.Services.Models.ArticleManagment;
 using ProgBlog.Services.Models.UserManagment;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ProgBlog.Services.Implementations
@@ -26,10 +25,11 @@ namespace ProgBlog.Services.Implementations
             this.articleService = articleService;
         }
 
-        public async Task<UserDetails> CreateUser(CreateUserRequest createdUser)
+        public async Task<UserDetails> CreateUserAsync(CreateUserRequest createdUser)
         {
-            const string role = "User";
             var dbUser = this.mapper.Map<DbUser>(createdUser);
+            this.CheckCreateUserConflicts(dbUser);
+            const string role = "User";
             dbUser.Role = role;
             dbUser.Articles = new List<string>();
             await this.context.Users.InsertOneAsync(dbUser);
@@ -37,59 +37,112 @@ namespace ProgBlog.Services.Implementations
             return this.mapper.Map<UserDetails>(dbUser);
         }
 
-        public async Task<UserDetails> GetUser(string userId)
+        public async Task<UserDetails> GetUserAsync(string userId)
         {
-            var dbUsers = await this.context.Users.FindAsync(u => u.Id == userId);
-            var dbUser = dbUsers.FirstOrDefault();
+            var dbUser = await this.GetDbUserAsync(userId);
             var userDetails = this.mapper.Map<UserDetails>(dbUser);
-            var articles = await this.articleService.GetArticles(dbUser.Articles);
-            userDetails.Articles = articles.ToList();
+
+            userDetails.Articles = await this.GetUsersArticles(dbUser.Articles);
             return userDetails;
         }
 
-        public async Task<IEnumerable<UserListItem>> GetUsers()
+        public async Task<IEnumerable<UserListItem>> GetUsersAsync()
         {
             var dbUsers = await this.context.Users.FindAsync(user => true);
             return this.mapper.Map<DbUser[], IEnumerable<UserListItem>> (dbUsers.ToEnumerable().ToArray());
         }
 
-        public Task Remove(string id)
+        public async Task DeleteUserAsync(string userId)
         {
-            return this.context.Users.DeleteOneAsync(user => user.Id == id);
+            var result = await this.context.Users.DeleteOneAsync(user => user.Id == userId);
+            if (result.DeletedCount == 0)
+            {
+                throw new UserNotFoundException();
+            }
         }
 
-        public async Task<UserDetails> UpdateUser(string id, UpdateUserRequest user)
+        public async Task<UserDetails> UpdateUserAsync(string userId, UpdateUserRequest user)
         {
-            var d = await this.context.Users.FindAsync(u => u.Id == id);
-            var dbUser = d.FirstOrDefault();
+            var dbUser = await this.GetDbUserAsync(userId);
             this.mapper.Map(user, dbUser);
-            await this.context.Users.FindOneAndReplaceAsync(u => u.Id == id, dbUser);
-            return this.mapper.Map<UserDetails>(dbUser);
+
+            this.CheckUpdateUserConflicts(dbUser);
+            await this.context.Users.FindOneAndReplaceAsync(u => u.Id == userId, dbUser);
+            var userDetails = this.mapper.Map<UserDetails>(dbUser);
+            userDetails.Articles = await this.GetUsersArticles(dbUser.Articles);
+            return userDetails;
         }
 
-        public async Task AddArticlesToUser(string userId, IEnumerable<string> articlesIds)
+        public async Task AddArticlesToUserAsync(UserDetails user, IEnumerable<string> articlesIds)
         {
-            var updateUser = await this.GetUpdateUserRequest(userId);
-            updateUser.Articles = updateUser.Articles
+            var dbUser = await this.GetDbUserAsync(user.Id);
+            dbUser.Articles = dbUser.Articles
                 .Concat(articlesIds)
                 .Distinct()
                 .ToList();
-            await this.UpdateUser(userId, updateUser);
+            await this.context.Users.FindOneAndReplaceAsync(u => u.Id == user.Id, dbUser);
+
+            //var updateUser = this.GetUpdateUserRequest(user);
+            //updateUser.Articles = updateUser.Articles
+            //    .Concat(articlesIds)
+            //    .Distinct()
+            //    .ToList();
+            //await this.UpdateUserAsync(user.Id, updateUser);
         }
 
-        public async Task RemoveArticlesFromUser(string userId, IEnumerable<string> articlesIds)
+        public async Task RemoveArticlesFromUserAsync(UserDetails user, IEnumerable<string> articlesIds)
         {
-            var updateUser = await this.GetUpdateUserRequest(userId);
-            updateUser.Articles = updateUser.Articles.Except(articlesIds).ToList();
-            await this.UpdateUser(userId, updateUser);
+            var dbUser = await this.GetDbUserAsync(user.Id);
+            dbUser.Articles = dbUser.Articles.Except(articlesIds).ToList();
+
+            await this.context.Users.FindOneAndReplaceAsync(u => u.Id == user.Id, dbUser);
         }
 
-        private async Task<UpdateUserRequest> GetUpdateUserRequest(string userId)
+        private async Task<DbUser> GetDbUserAsync(string userId)
         {
-            var user = await this.GetUser(userId);
-            var updateUser = this.mapper.Map<UpdateUserRequest>(user);
+            var usersCursor = await this.context.Users.FindAsync(u => u.Id == userId);
+            var user = usersCursor.FirstOrDefault();
+            if (user is null)
+            {
+                throw new UserNotFoundException();
+            }
 
-            return updateUser;
+            return user;
+        }
+
+        private async Task<IList<ArticleListItem>> GetUsersArticles(IList<string> ids)
+        {
+            var articles = await this.articleService.GetArticlesAsync(ids);
+            return articles.ToList();
+        }
+
+        private void CheckCreateUserConflicts(DbUser user)
+        {
+            if(this.context.Users.Find(u => u.Login == user.Login).CountDocuments() > 0)
+            {
+                throw new UserLoginConflictException();
+            }
+
+            if (this.context.Users.Find(u => u.Email == user.Email).CountDocuments() > 0)
+            {
+                throw new UserEmailConflictException();
+            }
+        }
+
+        private void CheckUpdateUserConflicts(DbUser checkUser)
+        {
+            var usersWithSameLogin = this.context.Users.Find(u => u.Login == checkUser.Login && u.Id != checkUser.Id);
+
+            if (usersWithSameLogin.CountDocuments() > 0)
+            {
+                throw new UserLoginConflictException();
+            }
+
+            var usersWithSameEmail = this.context.Users.Find(u => u.Email == checkUser.Email && u.Id != checkUser.Id);
+            if (usersWithSameEmail.CountDocuments() > 0)
+            {
+                throw new UserEmailConflictException();
+            }
         }
     }
 }

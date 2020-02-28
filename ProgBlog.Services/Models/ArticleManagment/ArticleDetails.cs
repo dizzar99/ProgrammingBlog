@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ProgBlog.Services.Models.CommentManagment;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ProgBlog.Services.Models.ArticleManagment
 {
     public class ArticleDetails : ArticleListItem
     {
         public string Content { get; set; }
+        public IList<Comment> Comments { get; set; }
     }
 }
