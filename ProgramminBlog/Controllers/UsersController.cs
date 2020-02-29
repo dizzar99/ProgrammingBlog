@@ -4,6 +4,8 @@ using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.UserManagment;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ProgramminBlog.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProgramminBlog.Controllers
 {
@@ -60,20 +62,24 @@ namespace ProgramminBlog.Controllers
         /// </remarks>
         /// <param name="user">Request for creating user.</param>
         /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<UserDetails>> CreateUser(CreateUserRequest user)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState.Values);
-            }
 
-            var created = await this.userService.CreateUserAsync(user);
-            var location = $"{ControllerUrl}api/users/{created.Id}";
-            return this.Created(location, created);
-        }
+
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status409Conflict)]
+        //public async Task<ActionResult<UserDetails>> CreateUser(CreateUserRequest user)
+        //{
+        //    if (!this.ModelState.IsValid)
+        //    {
+        //        return this.BadRequest(this.ModelState.Values);
+        //    }
+
+        //    var created = await this.userService.CreateUserAsync(user);
+        //    var location = $"{ControllerUrl}api/users/{created.Id}";
+        //    return this.Created(location, created);
+        //}
+
+
 
         /// <summary>
         /// Updates user with specified identifier.
@@ -81,42 +87,46 @@ namespace ProgramminBlog.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     POST api/users/{userId}
+        ///     POST api/users
         ///     {
         ///        "Login": "NewLogin",
         ///        "Email": someemail@mail.com,
         ///     }
         ///
         /// </remarks>
-        /// <param name="id">Identifier.</param>
+        /// <param name="userId">Identifier.</param>
         /// <param name="user">User fields to update.</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Authorize]
+        [IdentityFilter]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserListItem>> UpdateUser (string id, [FromBody] UpdateUserRequest user)
+        public async Task<ActionResult<UserListItem>> UpdateUser(string userId, [FromBody] UpdateUserRequest user)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.BadRequest(this.ModelState.Values);
             }
 
-            var updated = await this.userService.UpdateUserAsync(id, user);
+            var updated = await this.userService.UpdateUserAsync(userId, user);
             return this.Ok(updated);
         }
 
         /// <summary>
         /// Deletes user
         /// </summary>
-        /// <param name="id">User identifier.</param>
+        /// <param name="userId">User identifier.</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Authorize]
+        [IdentityFilter]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteUser(string id)
+        public async Task<ActionResult> DeleteUser(string userId)
         {
-            await this.userService.DeleteUserAsync(id);
+            await this.userService.DeleteUserAsync(userId);
             return this.NoContent();
         }
     }

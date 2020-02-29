@@ -81,13 +81,6 @@ namespace ProgBlog.Services.Implementations
                 .Distinct()
                 .ToList();
             await this.context.Users.FindOneAndReplaceAsync(u => u.Id == user.Id, dbUser);
-
-            //var updateUser = this.GetUpdateUserRequest(user);
-            //updateUser.Articles = updateUser.Articles
-            //    .Concat(articlesIds)
-            //    .Distinct()
-            //    .ToList();
-            //await this.UpdateUserAsync(user.Id, updateUser);
         }
 
         public async Task RemoveArticlesFromUserAsync(UserDetails user, IEnumerable<string> articlesIds)

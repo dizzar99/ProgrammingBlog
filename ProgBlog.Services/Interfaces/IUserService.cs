@@ -8,7 +8,6 @@ namespace ProgBlog.Services.Interfaces
     {
         Task<IEnumerable<UserListItem>> GetUsersAsync();
         Task<UserDetails> GetUserAsync(string userId);
-        Task<UserDetails> CreateUserAsync(CreateUserRequest user);
         Task<UserDetails> UpdateUserAsync(string id, UpdateUserRequest user);
         Task DeleteUserAsync(string id);
         Task AddArticlesToUserAsync(UserDetails user, IEnumerable<string> articleId);

@@ -6,6 +6,6 @@ namespace ProgBlog.Services.Models.ArticleManagment
 {
     public class CreateArticleRequest : UpdateArticleRequest
     {
-        public string AuthorId { get; set; }
+        public string UserId { get; set; }
     }
 }

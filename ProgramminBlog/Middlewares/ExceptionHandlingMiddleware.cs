@@ -36,7 +36,9 @@ namespace ProgramminBlog.Middlewares
             catch(Exception e)
             {
                 httpContext.Response.StatusCode = 500;
-                await httpContext.Response.WriteAsync(e.Message);
+                var json = JsonConvert.SerializeObject(e.Message);
+                httpContext.Response.ContentType = "Application/json";
+                await httpContext.Response.WriteAsync(json);
             }
         }
     }

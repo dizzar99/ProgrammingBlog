@@ -17,7 +17,7 @@ namespace ProgBlog.Services.Mapper
                 .ForMember(a => a.AuthorId, opt => opt.MapFrom(d => d.CreatedUserId));
             this.CreateMap<CreateArticleRequest, DbArticle>()
                 .ForMember(d => d.CreatedDate, opt => opt.MapFrom(a => DateTime.Now))
-                .ForMember(d => d.CreatedUserId, opt => opt.MapFrom(a => a.AuthorId));
+                .ForMember(d => d.CreatedUserId, opt => opt.MapFrom(a => a.UserId));
             this.CreateMap<UpdateArticleRequest, DbArticle>();
         }
     }

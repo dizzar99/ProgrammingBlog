@@ -7,6 +7,5 @@ namespace ProgBlog.Services.Models.UserManagment
     public class CreateUserRequest : UpdateUserRequest
     {
         public string Password { get; set; }
-
     }
 }

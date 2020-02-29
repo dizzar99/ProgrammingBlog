@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.ArticleManagment;
 using ProgBlog.Services.Models.CommentManagment;
 using ProgBlog.Services.Models.UserManagment;
+using ProgramminBlog.Filters;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProgramminBlog.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ArticlesController : ControllerBase
@@ -51,9 +51,11 @@ namespace ProgramminBlog.Controllers
         /// <param name="createArticle">The <see cref="CreateArticleRequest"/>.</param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
+        [IdentityFilter]
         public async Task<ArticleDetails> CreateArticleAsync([FromBody] CreateArticleRequest createArticle)
         {
-            var user = await this.GetUserAsync(createArticle.AuthorId);
+            var user = await this.GetUserAsync(createArticle.UserId);
             var article = await this.articleService.CreateArticleAsync(createArticle);
             await this.userService.AddArticlesToUserAsync(user, new string[] { article.Id });
 
@@ -63,13 +65,15 @@ namespace ProgramminBlog.Controllers
         /// <summary>
         /// Updates existing article.
         /// </summary>
-        /// <param name="id">Article identifier</param>
+        /// <param name="articleId">Article identifier</param>
         /// <param name="updateArticle">The <see cref="UpdateArticleRequest"/>.</param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ArticleDetails> UpdateArticleAsync(string id, [FromBody] UpdateArticleRequest updateArticle)
+        [Authorize]
+        [IdentityFilter]
+        public async Task<ArticleDetails> UpdateArticleAsync(string articleId, [FromBody] UpdateArticleRequest updateArticle)
         {
-            var article = await this.articleService.UpdateArticleAsync(id, updateArticle);
+            var article = await this.articleService.UpdateArticleAsync(articleId, updateArticle);
             return article;
         }
 
@@ -108,7 +112,7 @@ namespace ProgramminBlog.Controllers
         /// <param name="updateRequest">The <see cref="UpdateCommentRequest"/>.</param>
         /// <returns></returns>
         [HttpPut("{articleId}/comments/{commentId}")]
-        public async Task<Comment> GetCommentAsync(string articleId, string commentId, UpdateCommentRequest updateRequest)
+        public async Task<Comment> UpdateCommentAsync(string articleId, string commentId, UpdateCommentRequest updateRequest)
         {
             return await this.articleService.UpdateCommentAsync(articleId, commentId, updateRequest);
         }
