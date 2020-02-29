@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.UserManagment;
 using System.Collections.Generic;
@@ -6,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace ProgramminBlog.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private const string ControllerUrl = "localhost:5001/";
         private readonly IUserService userService;
 
         public UsersController(IUserService userService)
@@ -17,40 +20,104 @@ namespace ProgramminBlog.Controllers
             this.userService = userService;
         }
 
-        // GET: api/Users
+        /// <summary>
+        /// Get all registered users.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IEnumerable<UserListItem>> GetUsers()
         {
             return await this.userService.GetUsersAsync();
         }
 
+        /// <summary>
+        /// Get user with specified identifier.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<UserDetails> GetUser(string id)
         {
             return await this.userService.GetUserAsync(id);
         }
 
-        // POST: api/Users
+        /// <summary>
+        /// Register new user.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST api/users
+        ///     {
+        ///        "Login": "NewLogin",
+        ///        "Email": "someemail@mail.com",
+        ///        "Password": "StrogPassword"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="user">Request for creating user.</param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<UserDetails> CreateUser(CreateUserRequest user)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<UserDetails>> CreateUser(CreateUserRequest user)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState.Values);
+            }
+
             var created = await this.userService.CreateUserAsync(user);
-            return created;
+            var location = $"{ControllerUrl}api/users/{created.Id}";
+            return this.Created(location, created);
         }
 
-        // PUT: api/Users/5
+        /// <summary>
+        /// Updates user with specified identifier.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST api/users/{userId}
+        ///     {
+        ///        "Login": "NewLogin",
+        ///        "Email": someemail@mail.com,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Identifier.</param>
+        /// <param name="user">User fields to update.</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<UserListItem> UpdateUser (string id, [FromBody] UpdateUserRequest user)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserListItem>> UpdateUser (string id, [FromBody] UpdateUserRequest user)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState.Values);
+            }
+
             var updated = await this.userService.UpdateUserAsync(id, user);
-            return updated;
+            return this.Ok(updated);
         }
 
-        // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deletes user
+        /// </summary>
+        /// <param name="id">User identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task DeleteUser(string id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteUser(string id)
         {
             await this.userService.DeleteUserAsync(id);
+            return this.NoContent();
         }
     }
 }

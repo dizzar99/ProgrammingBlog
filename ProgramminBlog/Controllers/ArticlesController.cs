@@ -24,21 +24,32 @@ namespace ProgramminBlog.Controllers
             this.userService = userService;
         }
 
-        // GET: api/Articles
+        /// <summary>
+        /// Get all articles
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IEnumerable<ArticleListItem>> GetArticlesAsync()
         {
             return await this.articleService.GetArticlesAsync();
         }
 
-        // GET: api/Articles/5
+        /// <summary>
+        /// Get article with specified identifier
+        /// </summary>
+        /// <param name="id">Article identifier</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ArticleDetails> GetArticleAsync(string id)
         {
             return await this.articleService.GetArticleAsync(id);
         }
 
-        // POST: api/Articles
+        /// <summary>
+        /// Creates new article.
+        /// </summary>
+        /// <param name="createArticle">The <see cref="CreateArticleRequest"/>.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ArticleDetails> CreateArticleAsync([FromBody] CreateArticleRequest createArticle)
         {
@@ -49,7 +60,12 @@ namespace ProgramminBlog.Controllers
             return article;
         }
 
-        // PUT: api/Articles/5
+        /// <summary>
+        /// Updates existing article.
+        /// </summary>
+        /// <param name="id">Article identifier</param>
+        /// <param name="updateArticle">The <see cref="UpdateArticleRequest"/>.</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<ArticleDetails> UpdateArticleAsync(string id, [FromBody] UpdateArticleRequest updateArticle)
         {
@@ -57,7 +73,11 @@ namespace ProgramminBlog.Controllers
             return article;
         }
 
-        // DELETE: api/ApiWithActions/5
+        /// <summary>
+        /// Deletes article.
+        /// </summary>
+        /// <param name="articleId">Artile identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{articleId}")]
         public async Task DeleteArticleAsync(string articleId)
         {
@@ -67,6 +87,12 @@ namespace ProgramminBlog.Controllers
             await this.DeleteArticleFromUserAsync(article);
         }
 
+        /// <summary>
+        /// Add a new comment to the article
+        /// </summary>
+        /// <param name="articleId">Article identifier.</param>
+        /// <param name="createComment">The <see cref="CreateCommentRequest"/>.</param>
+        /// <returns></returns>
         [HttpPost("{articleId}/comments")]
         public async Task<Comment> AddCommentAsync(string articleId, CreateCommentRequest createComment)
         {
@@ -74,12 +100,25 @@ namespace ProgramminBlog.Controllers
             return comment;
         }
 
+        /// <summary>
+        /// Updates a comment of an article.
+        /// </summary>
+        /// <param name="articleId">Article identifier.</param>
+        /// <param name="commentId">Comment identifier</param>
+        /// <param name="updateRequest">The <see cref="UpdateCommentRequest"/>.</param>
+        /// <returns></returns>
         [HttpPut("{articleId}/comments/{commentId}")]
         public async Task<Comment> GetCommentAsync(string articleId, string commentId, UpdateCommentRequest updateRequest)
         {
             return await this.articleService.UpdateCommentAsync(articleId, commentId, updateRequest);
         }
 
+        /// <summary>
+        /// Deletes a comment from the article.
+        /// </summary>
+        /// <param name="articleId">Article identifier.</param>
+        /// <param name="commentId">Comment identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{articleId}/comments/{commentId}")]
         public async Task DeleteCommentAsync(string articleId, string commentId)
         {

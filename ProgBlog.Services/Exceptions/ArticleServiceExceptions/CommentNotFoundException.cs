@@ -9,7 +9,7 @@ namespace ProgBlog.Services.Exceptions.ArticleServiceExceptions
         private const string ErrorMessage = "These article doesn't contain the comment with such id.";
         public CommentNotFoundException(string errorMessage = ErrorMessage) : base(404, errorMessage)
         {
-
+            this.Field = "Comment.Id";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using ProgBlog.Services.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,13 @@ namespace ProgramminBlog.Middlewares
             }
             catch(ServiceException e)
             {
+                httpContext.Response.Clear();
                 httpContext.Response.StatusCode = e.ErrorCode;
-                await httpContext.Response.WriteAsync(e.Message);
+                var errorObj = new { ErrorField = e.Field, ErrorMessage = e.Message };
+                var json = JsonConvert.SerializeObject(errorObj);
+                httpContext.Response.ContentType = "Application/json";
+                await httpContext.Response.WriteAsync(json);
+                //await httpContext.Response.WriteAsync(new { ErrorMessage = e.Message});
             }
             catch(Exception e)
             {

@@ -11,5 +11,6 @@ namespace ProgBlog.Services.Exceptions
             this.ErrorCode = errorCode;
         }
         public int ErrorCode { get; set; }
+        public string Field { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace ProgBlog.Services.Exceptions.UserServiceExceptions
         private const string ErrorMessage = "User with same email address is already in the service.";
         public UserEmailConflictException() : base(409, ErrorMessage)
         {
-
+            this.Field = "Email";
         }
     }
 }

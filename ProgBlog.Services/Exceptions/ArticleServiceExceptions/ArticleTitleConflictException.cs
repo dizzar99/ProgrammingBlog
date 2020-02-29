@@ -9,7 +9,7 @@ namespace ProgBlog.Services.Exceptions.ArticleServiceExceptions
         private const string ErrorMessage = "Article with the same title is already in the service.";
         public ArticleTitleConflictException() : base(409, ErrorMessage)
         {
-
+            this.Field = "Title";
         }
     }
 }

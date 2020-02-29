@@ -9,7 +9,7 @@ namespace ProgBlog.Services.Exceptions.UserServiceExceptions
         private const string ErrorMessage = "User with same login is already in the service.";
         public UserLoginConflictException() : base(409, ErrorMessage)
         {
-
+            this.Field = "Login";
         }
     }
 }

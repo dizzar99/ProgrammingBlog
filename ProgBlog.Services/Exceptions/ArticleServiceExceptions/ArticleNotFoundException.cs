@@ -9,7 +9,7 @@ namespace ProgBlog.Services.Exceptions.ArticleServiceExceptions
         private const string ErrorMessage = "Article with such id not found.";
         public ArticleNotFoundException() : base(404, ErrorMessage)
         {
-
+            this.Field = "Id";
         }
     }
 }
