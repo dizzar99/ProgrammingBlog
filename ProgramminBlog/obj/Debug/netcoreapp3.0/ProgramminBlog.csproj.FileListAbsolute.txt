@@ -124,3 +124,7 @@ C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\obj\Debug\netcoreapp3.0\ProgramminBlog.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\obj\Debug\netcoreapp3.0\ProgramminBlog.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\MailKit.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\MimeKit.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\NETCore.MailKit.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\BouncyCastle.Crypto.dll

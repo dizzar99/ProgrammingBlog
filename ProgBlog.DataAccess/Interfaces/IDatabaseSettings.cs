@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProgBlog.DataAccess.Interfaces
+﻿namespace ProgBlog.DataAccess.Interfaces
 {
     public interface IDatabaseSettings
     {

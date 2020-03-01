@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProgBlog.Services.Exceptions.UserCredentialsExceptions;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.ArticleManagment;
 using ProgBlog.Services.Models.CommentManagment;
@@ -29,7 +30,7 @@ namespace ProgramminBlog.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<ArticleListItem>> GetArticlesAsync()
+        public async Task<IEnumerable<Article>> GetArticlesAsync()
         {
             return await this.articleService.GetArticlesAsync();
         }
@@ -48,13 +49,15 @@ namespace ProgramminBlog.Controllers
         /// <summary>
         /// Creates new article.
         /// </summary>
+        /// <param name="userId">User Identifier.</param>
         /// <param name="createArticle">The <see cref="CreateArticleRequest"/>.</param>
         /// <returns></returns>
         [HttpPost]
         [Authorize]
         [IdentityFilter]
-        public async Task<ArticleDetails> CreateArticleAsync([FromBody] CreateArticleRequest createArticle)
+        public async Task<ArticleDetails> CreateArticleAsync(string userId, [FromBody] CreateArticleRequest createArticle)
         {
+            createArticle.UserId = userId;
             var user = await this.GetUserAsync(createArticle.UserId);
             var article = await this.articleService.CreateArticleAsync(createArticle);
             await this.userService.AddArticlesToUserAsync(user, new string[] { article.Id });
@@ -65,41 +68,61 @@ namespace ProgramminBlog.Controllers
         /// <summary>
         /// Updates existing article.
         /// </summary>
+        /// <param name="userId">User identifier.</param>
         /// <param name="articleId">Article identifier</param>
         /// <param name="updateArticle">The <see cref="UpdateArticleRequest"/>.</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPut("{articleId}")]
         [Authorize]
         [IdentityFilter]
-        public async Task<ArticleDetails> UpdateArticleAsync(string articleId, [FromBody] UpdateArticleRequest updateArticle)
+        public async Task<IActionResult> UpdateArticleAsync(string userId, string articleId, [FromBody] UpdateArticleRequest updateArticle)
         {
-            var article = await this.articleService.UpdateArticleAsync(articleId, updateArticle);
-            return article;
+            var article = await this.articleService.GetArticleAsync(articleId);
+            if (article.AuthorId != userId)
+            {
+                throw new AccessDeniedException("Only author can update his articles");
+            }
+
+            var result = await this.articleService.UpdateArticleAsync(articleId, updateArticle);
+            return this.Ok(result);
         }
 
         /// <summary>
         /// Deletes article.
         /// </summary>
+        /// <param name="userId">User Identifier</param>
         /// <param name="articleId">Artile identifier.</param>
         /// <returns></returns>
         [HttpDelete("{articleId}")]
-        public async Task DeleteArticleAsync(string articleId)
+        [Authorize]
+        [IdentityFilter]
+        public async Task<IActionResult> DeleteArticleAsync(string userId, string articleId)
         {
             var article = await this.articleService.GetArticleAsync(articleId);
+            if (article.AuthorId != userId)
+            {
+                throw new AccessDeniedException("Only author can delete his articles");
+            }
+
             await this.articleService.DeleteArticleAsync(articleId);
 
             await this.DeleteArticleFromUserAsync(article);
+            return this.NoContent();
         }
 
         /// <summary>
         /// Add a new comment to the article
         /// </summary>
+        /// <param name="userId">User identifier.</param>
         /// <param name="articleId">Article identifier.</param>
         /// <param name="createComment">The <see cref="CreateCommentRequest"/>.</param>
         /// <returns></returns>
         [HttpPost("{articleId}/comments")]
-        public async Task<Comment> AddCommentAsync(string articleId, CreateCommentRequest createComment)
+        [Authorize]
+        [IdentityFilter]
+        public async Task<Comment> AddCommentAsync(string userId, string articleId, CreateCommentRequest createComment)
         {
+            createComment.UserId = userId;
             var comment = await this.articleService.AddCommentAsync(articleId, createComment);
             return comment;
         }
@@ -112,6 +135,8 @@ namespace ProgramminBlog.Controllers
         /// <param name="updateRequest">The <see cref="UpdateCommentRequest"/>.</param>
         /// <returns></returns>
         [HttpPut("{articleId}/comments/{commentId}")]
+        [Authorize]
+        [IdentityFilter]
         public async Task<Comment> UpdateCommentAsync(string articleId, string commentId, UpdateCommentRequest updateRequest)
         {
             return await this.articleService.UpdateCommentAsync(articleId, commentId, updateRequest);
@@ -124,6 +149,8 @@ namespace ProgramminBlog.Controllers
         /// <param name="commentId">Comment identifier.</param>
         /// <returns></returns>
         [HttpDelete("{articleId}/comments/{commentId}")]
+        [Authorize]
+        [IdentityFilter]
         public async Task DeleteCommentAsync(string articleId, string commentId)
         {
             await this.articleService.DeleteCommentAsync(articleId, commentId);
@@ -137,7 +164,7 @@ namespace ProgramminBlog.Controllers
         private async Task DeleteArticleFromUserAsync(ArticleDetails article)
         {
             var user = await this.GetUserAsync(article.AuthorId);
-            await this.userService.RemoveArticlesFromUserAsync(user, new string[] { article.Id });
+            await this.userService.DeleteArticlesFromUserAsync(user, new string[] { article.Id });
         }
     }
 }

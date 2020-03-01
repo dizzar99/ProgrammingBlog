@@ -25,17 +25,17 @@ namespace ProgBlog.Services.Implementations
             this.articleService = articleService;
         }
 
-        public async Task<UserDetails> CreateUserAsync(CreateUserRequest createdUser)
-        {
-            var dbUser = this.mapper.Map<DbUser>(createdUser);
-            this.CheckCreateUserConflicts(dbUser);
-            const string role = "User";
-            dbUser.Role = role;
-            dbUser.Articles = new List<string>();
-            await this.context.Users.InsertOneAsync(dbUser);
+        //public async Task<UserDetails> CreateUserAsync(CreateUserRequest createdUser)
+        //{
+        //    var dbUser = this.mapper.Map<DbUser>(createdUser);
+        //    this.CheckCreateUserConflicts(dbUser);
+        //    const string role = "User";
+        //    dbUser.Role = role;
+        //    dbUser.Articles = new List<string>();
+        //    await this.context.Users.InsertOneAsync(dbUser);
 
-            return this.mapper.Map<UserDetails>(dbUser);
-        }
+        //    return this.mapper.Map<UserDetails>(dbUser);
+        //}
 
         public async Task<UserDetails> GetUserAsync(string userId)
         {
@@ -83,7 +83,7 @@ namespace ProgBlog.Services.Implementations
             await this.context.Users.FindOneAndReplaceAsync(u => u.Id == user.Id, dbUser);
         }
 
-        public async Task RemoveArticlesFromUserAsync(UserDetails user, IEnumerable<string> articlesIds)
+        public async Task DeleteArticlesFromUserAsync(UserDetails user, IEnumerable<string> articlesIds)
         {
             var dbUser = await this.GetDbUserAsync(user.Id);
             dbUser.Articles = dbUser.Articles.Except(articlesIds).ToList();
@@ -103,7 +103,7 @@ namespace ProgBlog.Services.Implementations
             return user;
         }
 
-        private async Task<IList<ArticleListItem>> GetUsersArticles(IList<string> ids)
+        private async Task<IList<Article>> GetUsersArticles(IList<string> ids)
         {
             var articles = await this.articleService.GetArticlesAsync(ids);
             return articles.ToList();

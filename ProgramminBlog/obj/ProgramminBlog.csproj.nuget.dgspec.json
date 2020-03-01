@@ -123,6 +123,18 @@
               "target": "Package",
               "version": "[8.6.1, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[2.5.1, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[2.5.1, )"
+            },
+            "NETCore.MailKit": {
+              "target": "Package",
+              "version": "[2.0.2, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",

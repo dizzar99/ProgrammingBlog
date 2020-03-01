@@ -2,8 +2,6 @@
 using ProgBlog.DataAccess.Models;
 using ProgBlog.Services.Models.CommentManagment;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProgBlog.Services.Mapper
 {

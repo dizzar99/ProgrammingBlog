@@ -81,17 +81,17 @@ namespace ProgBlog.Services.Implementations
             return articleDetails;
         }
 
-        public async Task<IEnumerable<ArticleListItem>> GetArticlesAsync()
+        public async Task<IEnumerable<Article>> GetArticlesAsync()
         {
             var articles = this.context.Articles.Find(a => true).ToEnumerable();
-            var result = this.mapper.Map<IEnumerable<DbArticle>, IEnumerable<ArticleListItem>>(articles);
+            var result = this.mapper.Map<IEnumerable<DbArticle>, IEnumerable<Article>>(articles);
             return await Task.FromResult(result);
         }
 
-        public async Task<IEnumerable<ArticleListItem>> GetArticlesAsync(IList<string> ids)
+        public async Task<IEnumerable<Article>> GetArticlesAsync(IList<string> ids)
         {
             var articles = await this.context.Articles.FindAsync(d => ids.Contains(d.Id));
-            return this.mapper.Map<DbArticle[], IEnumerable<ArticleListItem>>(articles.ToEnumerable().ToArray());
+            return this.mapper.Map<DbArticle[], IEnumerable<Article>>(articles.ToEnumerable().ToArray());
         }
 
         public async Task DeleteArticleAsync(string articleId)

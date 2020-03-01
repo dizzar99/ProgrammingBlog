@@ -29,5 +29,11 @@ namespace ProgramminBlog.Controllers
             var authentication = await this.identityService.LoginAsync(loginRequest);
             return this.Ok(authentication);
         }
+
+        [HttpPost("changePassword")]
+        public async Task ChangePassword(ChangePasswordRequest changePassword)
+        {
+            await this.identityService.ChangePasswordAsync(changePassword);
+        }
     }
 }

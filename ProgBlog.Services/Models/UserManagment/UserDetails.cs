@@ -7,6 +7,6 @@ namespace ProgBlog.Services.Models.UserManagment
 {
     public class UserDetails : UserListItem
     {
-        public IList<ArticleListItem> Articles { get; set; }
+        public IList<Article> Articles { get; set; }
     }
 }

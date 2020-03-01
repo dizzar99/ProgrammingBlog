@@ -15,18 +15,19 @@ namespace ProgBlog.Services.Implementations
     {
         private readonly IUserManager userManager;
         private readonly JwtSettings jwtSetting;
+        private readonly IEmailSender emailSender;
 
-        public IdentityService(IUserManager userManager, JwtSettings jwtSetting)
+        public IdentityService(IUserManager userManager, JwtSettings jwtSetting, IEmailSender emailSender)
         {
             this.userManager = userManager;
             this.jwtSetting = jwtSetting;
+            this.emailSender = emailSender;
         }
 
         public async Task<AuthenticationResult> RegisterAsync(RegisterUserRequest registerRequest)
         {
-            await this.userManager.CreateUserAsync(registerRequest);
+            var credentials = await this.userManager.CreateUserAsync(registerRequest);
 
-            var credentials = await this.userManager.GetByLoginAsync(registerRequest.Login);
             return this.AuthenticateUser(credentials);
         }
 
@@ -39,6 +40,27 @@ namespace ProgBlog.Services.Implementations
             }
 
             return this.AuthenticateUser(credentials);
+        }
+
+        public async Task ChangePasswordAsync(ChangePasswordRequest changePassword)
+        {
+            var credentials = await this.userManager.GetByLoginAsync(changePassword.Login);
+            if (credentials.Email != changePassword.Email)
+            {
+                // TODO: exception
+            }
+
+            string newPassword = this.GenerateNewPassword();
+            await this.userManager.ChangePasswordAsync(credentials.Login, newPassword);
+            string subject = "Change your password";
+            var message = new Message
+            {
+                To = changePassword.Email,
+                Subject = subject,
+                Content = newPassword
+            };
+
+            this.emailSender.SendMail(message);
         }
 
         private AuthenticationResult AuthenticateUser(UserCredentials credentials)
@@ -78,8 +100,14 @@ namespace ProgBlog.Services.Implementations
                     expires: now.Add(TimeSpan.FromMinutes(2)),
                     signingCredentials: new SigningCredentials(this.jwtSetting.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            const string bearer = "Bearer ";
 
-            return encodedJwt;
+            return bearer + encodedJwt;
+        }
+
+        private string GenerateNewPassword()
+        {
+            return "!QAZxsw2";
         }
     }
 }

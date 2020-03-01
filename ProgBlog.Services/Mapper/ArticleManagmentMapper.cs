@@ -2,8 +2,6 @@
 using ProgBlog.DataAccess.Models;
 using ProgBlog.Services.Models.ArticleManagment;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProgBlog.Services.Mapper
 {
@@ -11,7 +9,7 @@ namespace ProgBlog.Services.Mapper
     {
         public ArticleManagmentMapper()
         {
-            this.CreateMap<DbArticle, ArticleListItem>()
+            this.CreateMap<DbArticle, Article>()
                 .ForMember(d => d.AuthorId, opt => opt.MapFrom(a => a.CreatedUserId));
             this.CreateMap<DbArticle, ArticleDetails>()
                 .ForMember(a => a.AuthorId, opt => opt.MapFrom(d => d.CreatedUserId));

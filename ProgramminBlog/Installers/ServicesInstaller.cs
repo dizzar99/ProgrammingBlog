@@ -15,6 +15,7 @@ namespace ProgramminBlog.Installers
             services.AddScoped<IArticleService, ArticleService>();
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IEmailSender, EmailSender>();
         }
     }
 }

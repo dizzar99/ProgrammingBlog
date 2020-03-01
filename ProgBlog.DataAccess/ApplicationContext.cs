@@ -1,10 +1,6 @@
 ﻿using MongoDB.Driver;
 using ProgBlog.DataAccess.Interfaces;
 using ProgBlog.DataAccess.Models;
-using ProgBlog.DataAccess.Test;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProgBlog.DataAccess
 {

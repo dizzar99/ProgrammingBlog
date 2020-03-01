@@ -9,7 +9,7 @@ namespace ProgBlog.Services.Mapper
     {
         public UserCredentialsManagmentMapper()
         {
-            this.CreateMap<RegisterUserRequest, CreateUserRequest>();
+            
             this.CreateMap<DbUser, UserCredentials>();
             this.CreateMap<RegisterUserRequest, DbUser>();
         }

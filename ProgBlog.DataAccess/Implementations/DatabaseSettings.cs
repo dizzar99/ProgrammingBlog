@@ -1,7 +1,4 @@
 ﻿using ProgBlog.DataAccess.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProgBlog.DataAccess.Implementations
 {

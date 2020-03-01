@@ -13,6 +13,7 @@ namespace ProgramminBlog.Installers
             var jwtSettings = new JwtSettings();
             configuration.Bind(nameof(JwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateLifetime = true,
@@ -23,11 +24,11 @@ namespace ProgramminBlog.Installers
             };
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.RequireHttpsMetadata = false;
-                        options.TokenValidationParameters = tokenValidationParameters;
-                    });
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = tokenValidationParameters;
+                });
         }
     }
 }

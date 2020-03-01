@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProgBlog.Services.Models.CommentManagment
+﻿namespace ProgBlog.Services.Models.CommentManagment
 {
     public class CreateCommentRequest : UpdateCommentRequest
     {

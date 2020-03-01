@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.UserManagment;
+using ProgramminBlog.Filters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProgramminBlog.Filters;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ProgramminBlog.Controllers
 {

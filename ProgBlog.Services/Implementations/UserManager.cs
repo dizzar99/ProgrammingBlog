@@ -43,6 +43,14 @@ namespace ProgBlog.Services.Implementations
             return this.mapper.Map<UserCredentials>(dbUser);
         }
 
+        public async Task ChangePasswordAsync(string login, string newPassword)
+        {
+            var dbUserCursor = await this.context.Users.FindAsync(u => u.Login == login);
+            var dbUser = dbUserCursor.First();
+            dbUser.Password = newPassword;
+            await this.context.Users.FindOneAndReplaceAsync(u => u.Id == dbUser.Id, dbUser);
+        }
+
         private void CheckCreateUserConflicts(DbUser user)
         {
             if (this.context.Users.Find(u => u.Login == user.Login).CountDocuments() > 0)

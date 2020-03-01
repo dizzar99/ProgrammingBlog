@@ -11,6 +11,9 @@
         "dependencies": {
           "AutoMapper": "9.0.0",
           "FluentValidation": "8.6.1",
+          "MailKit": "2.5.1",
+          "MimeKit": "2.5.1",
+          "NETCore.MailKit": "2.0.2",
           "NETStandard.Library": "2.0.3",
           "ProgBlog.DataAccess": "1.0.0",
           "System.IdentityModel.Tokens.Jwt": "5.6.0"
@@ -50,6 +53,20 @@
           "lib/netstandard2.0/FluentValidation.dll": {
             "assemblyVersion": "8.0.0.0",
             "fileVersion": "8.6.1.0"
+          }
+        }
+      },
+      "MailKit/2.5.1": {
+        "dependencies": {
+          "MimeKit": "2.5.1",
+          "System.Net.NameResolution": "4.3.0",
+          "System.Net.Security": "4.3.2",
+          "System.Runtime.Serialization.Primitives": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/MailKit.dll": {
+            "assemblyVersion": "2.5.0.0",
+            "fileVersion": "2.5.1.0"
           }
         }
       },
@@ -171,6 +188,21 @@
           "System.Runtime.InteropServices": "4.3.0"
         }
       },
+      "MimeKit/2.5.1": {
+        "dependencies": {
+          "Portable.BouncyCastle": "1.8.5",
+          "System.Data.Common": "4.3.0",
+          "System.Globalization.Extensions": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Text.Encoding.CodePages": "4.5.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/MimeKit.dll": {
+            "assemblyVersion": "2.5.0.0",
+            "fileVersion": "2.5.1.0"
+          }
+        }
+      },
       "MongoDB.Bson/2.10.2": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
@@ -236,6 +268,18 @@
           }
         }
       },
+      "NETCore.MailKit/2.0.2": {
+        "dependencies": {
+          "MailKit": "2.5.1",
+          "Microsoft.Extensions.DependencyInjection": "3.1.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/NETCore.MailKit.dll": {
+            "assemblyVersion": "2.0.2.0",
+            "fileVersion": "2.0.2.0"
+          }
+        }
+      },
       "NETStandard.Library/2.0.3": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
@@ -274,6 +318,14 @@
           "lib/netstandard1.3/Newtonsoft.Json.dll": {
             "assemblyVersion": "10.0.0.0",
             "fileVersion": "10.0.1.20720"
+          }
+        }
+      },
+      "Portable.BouncyCastle/1.8.5": {
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "assemblyVersion": "1.8.5.0",
+            "fileVersion": "1.8.5.50"
           }
         }
       },
@@ -458,6 +510,24 @@
           "lib/netstandard1.5/System.ComponentModel.TypeConverter.dll": {
             "assemblyVersion": "4.1.1.0",
             "fileVersion": "4.6.24702.1"
+          }
+        }
+      },
+      "System.Data.Common/4.3.0": {
+        "dependencies": {
+          "System.Collections": "4.3.0",
+          "System.Globalization": "4.3.0",
+          "System.IO": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Text.RegularExpressions": "4.3.0",
+          "System.Threading.Tasks": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.2/System.Data.Common.dll": {
+            "assemblyVersion": "4.1.1.0",
+            "fileVersion": "4.6.24705.1"
           }
         }
       },
@@ -1337,6 +1407,13 @@
       "path": "fluentvalidation/8.6.1",
       "hashPath": "fluentvalidation.8.6.1.nupkg.sha512"
     },
+    "MailKit/2.5.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0sLYQsWszoqdQorVnfCMsRswBYwodpO03fS5Ij1m7Qx6B02IlgXYLwsLqIJHkvUOoEOazrwxIerIZwujV1/Mbw==",
+      "path": "mailkit/2.5.1",
+      "hashPath": "mailkit.2.5.1.nupkg.sha512"
+    },
     "Microsoft.Bcl.AsyncInterfaces/1.1.0": {
       "type": "package",
       "serviceable": true,
@@ -1428,6 +1505,13 @@
       "path": "microsoft.win32.registry/4.0.0",
       "hashPath": "microsoft.win32.registry.4.0.0.nupkg.sha512"
     },
+    "MimeKit/2.5.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KcySIws+ZT1ubER/Z09T9FQ2fsliqFORuLayKCr3mj0Sk4mqXKMvuX2B/W7FHMrLYocYrnU6ngvwVExxwxFrmA==",
+      "path": "mimekit/2.5.1",
+      "hashPath": "mimekit.2.5.1.nupkg.sha512"
+    },
     "MongoDB.Bson/2.10.2": {
       "type": "package",
       "serviceable": true,
@@ -1456,6 +1540,13 @@
       "path": "mongodb.libmongocrypt/1.0.0",
       "hashPath": "mongodb.libmongocrypt.1.0.0.nupkg.sha512"
     },
+    "NETCore.MailKit/2.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Hs5PBogh0AGAbitU4BlTbDg7tG71Q+HL8H0V60TDxGypXV1FFQ7EkRE/lcIz5CwTjonMKH4H0xXk/9jmuGFvig==",
+      "path": "netcore.mailkit/2.0.2",
+      "hashPath": "netcore.mailkit.2.0.2.nupkg.sha512"
+    },
     "NETStandard.Library/2.0.3": {
       "type": "package",
       "serviceable": true,
@@ -1469,6 +1560,13 @@
       "sha512": "sha512-ebWzW9j2nwxQeBo59As2TYn7nYr9BHicqqCwHOD1Vdo+50HBtLPuqdiCYJcLdTRknpYis/DSEOQz5KmZxwrIAg==",
       "path": "newtonsoft.json/10.0.1",
       "hashPath": "newtonsoft.json.10.0.1.nupkg.sha512"
+    },
+    "Portable.BouncyCastle/1.8.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EaCgmntbH1sOzemRTqyXSqYjB6pLH7VCYHhhDYZ59guHSD5qPwhIYa7kfy0QUlmTRt9IXhaXdFhNuBUArp70Ng==",
+      "path": "portable.bouncycastle/1.8.5",
+      "hashPath": "portable.bouncycastle.1.8.5.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
       "type": "package",
@@ -1651,6 +1749,13 @@
       "sha512": "sha512-HZiP0DwTHJ+C+rdFqP47nBYUh5283kcwXIGY2zOVVhsJmVI/2tYiX2zNRdjRQRHsTox58Ydkec6h0pWSh8wAsw==",
       "path": "system.componentmodel.typeconverter/4.3.0",
       "hashPath": "system.componentmodel.typeconverter.4.3.0.nupkg.sha512"
+    },
+    "System.Data.Common/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lm6E3T5u7BOuEH0u18JpbJHxBfOJPuCyl4Kg1RH10ktYLp5uEEE1xKrHW56/We4SnZpGAuCc9N0MJpSDhTHZGQ==",
+      "path": "system.data.common/4.3.0",
+      "hashPath": "system.data.common.4.3.0.nupkg.sha512"
     },
     "System.Diagnostics.Debug/4.3.0": {
       "type": "package",

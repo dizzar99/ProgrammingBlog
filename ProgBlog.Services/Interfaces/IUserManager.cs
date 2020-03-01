@@ -7,5 +7,6 @@ namespace ProgBlog.Services.Interfaces
     {
         Task<UserCredentials> GetByLoginAsync(string login);
         Task<UserCredentials> CreateUserAsync(RegisterUserRequest registerRequest);
+        Task ChangePasswordAsync(string login, string newPassword);
     }
 }
