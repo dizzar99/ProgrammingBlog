@@ -2,23 +2,20 @@
 using MimeKit;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.IdentityManagment;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProgBlog.Services.Implementations
 {
     public class EmailSender : IEmailSender
     {
-        private const string From = "dizarr99@yandex.ru";
+        private const string From = "changing.passchange@yandex.ru";
         private const string SmtpServer = "smtp.yandex.ru";
         private const int Port = 25;
         private const string Password = "DimaZarembo2909";
         public void SendMail(Message message)
         {
-            var emailMessage = CreateEmailMessage(message);
+            var emailMessage = this.CreateEmailMessage(message);
 
-            Send(emailMessage);
+            this.Send(emailMessage);
         }
 
         private MimeMessage CreateEmailMessage(Message message)
@@ -43,11 +40,6 @@ namespace ProgBlog.Services.Implementations
                     client.Authenticate(From, Password);
 
                     client.Send(mailMessage);
-                }
-                catch
-                {
-                    //log an error message or throw an exception or both.
-                    throw;
                 }
                 finally
                 {

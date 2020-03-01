@@ -121,7 +121,7 @@ namespace ProgramminBlog.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Authorize]
-        [IdentityFilter]
+        [OwnerOrAdminFilter]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteUser(string userId)

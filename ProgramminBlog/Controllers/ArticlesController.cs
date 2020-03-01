@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace ProgramminBlog.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ArticlesController : ControllerBase
