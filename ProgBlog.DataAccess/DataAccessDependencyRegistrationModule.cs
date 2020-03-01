@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using ProgBlog.DataAccess;
+using ProgBlog.Common;
 using ProgBlog.DataAccess.Implementations;
 using ProgBlog.DataAccess.Interfaces;
 
-namespace ProgramminBlog.Installers
+namespace ProgBlog.DataAccess
 {
-    public class DataAccessInstaller : IInstaller
+    public class DataAccessDependencyRegistrationModule : IDependencyInstaller
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {

@@ -2,15 +2,16 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using ProgBlog.Common;
 using ProgBlog.Services.Models.ArticleManagment;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace ProgramminBlog.Installers
+namespace ProgramminBlog.DependencyInstallers
 {
-    public class WebApiInstaller : IInstaller
+    public class WebApiInstaller : IDependencyInstaller
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {

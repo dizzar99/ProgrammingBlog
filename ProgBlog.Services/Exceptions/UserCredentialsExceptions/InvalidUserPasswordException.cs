@@ -7,7 +7,7 @@ namespace ProgBlog.Services.Exceptions.UserCredentialsExceptions
     public class InvalidUserPasswordException : ServiceException
     {
         private const string ErrorMessage = "Invalid password.";
-        public InvalidUserPasswordException() : base(400, ErrorMessage)
+        public InvalidUserPasswordException() : base(401, ErrorMessage)
         {
             this.Field = "Password";
         }

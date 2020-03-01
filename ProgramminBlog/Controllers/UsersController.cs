@@ -14,7 +14,6 @@ namespace ProgramminBlog.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private const string ControllerUrl = "localhost:5001/";
         private readonly IUserService userService;
 
         public UsersController(IUserService userService)
@@ -47,41 +46,6 @@ namespace ProgramminBlog.Controllers
         }
 
         /// <summary>
-        /// Register new user.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST api/users
-        ///     {
-        ///        "Login": "NewLogin",
-        ///        "Email": "someemail@mail.com",
-        ///        "Password": "StrogPassword"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="user">Request for creating user.</param>
-        /// <returns></returns>
-
-
-        //[HttpPost]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status409Conflict)]
-        //public async Task<ActionResult<UserDetails>> CreateUser(CreateUserRequest user)
-        //{
-        //    if (!this.ModelState.IsValid)
-        //    {
-        //        return this.BadRequest(this.ModelState.Values);
-        //    }
-
-        //    var created = await this.userService.CreateUserAsync(user);
-        //    var location = $"{ControllerUrl}api/users/{created.Id}";
-        //    return this.Created(location, created);
-        //}
-
-
-
-        /// <summary>
         /// Updates user with specified identifier.
         /// </summary>
         /// <remarks>
@@ -97,9 +61,9 @@ namespace ProgramminBlog.Controllers
         /// <param name="userId">Identifier.</param>
         /// <param name="user">User fields to update.</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("{userId}")]
         [Authorize]
-        [IdentityFilter]
+        [AccountOwnerFilter]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -119,9 +83,9 @@ namespace ProgramminBlog.Controllers
         /// </summary>
         /// <param name="userId">User identifier.</param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{userId}")]
         [Authorize]
-        [OwnerOrAdminFilter]
+        [AccountOwnerFilter]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteUser(string userId)

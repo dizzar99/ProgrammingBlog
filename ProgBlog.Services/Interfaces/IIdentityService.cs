@@ -7,6 +7,7 @@ namespace ProgBlog.Services.Interfaces
     {
         Task<AuthenticationResult> RegisterAsync(RegisterUserRequest registerRequest);
         Task<AuthenticationResult> LoginAsync(LoginUserRequest loginRequest);
+        Task ResetPasswordAsync(ResetPasswordRequest resetPassword);
         Task ChangePasswordAsync(ChangePasswordRequest changePassword);
     }
 }

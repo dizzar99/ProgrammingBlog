@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProgBlog.Common\ProgBlog.Common.csproj" />
     <ProjectReference Include="..\ProgBlog.DataAccess\ProgBlog.DataAccess.csproj" />
   </ItemGroup>
 

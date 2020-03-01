@@ -2,10 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProgramminBlog.Installers;
+using ProgramminBlog.DependencyInstallers;
 using ProgramminBlog.Middlewares;
-using System;
-using System.Linq;
 
 namespace ProgramminBlog
 {
@@ -20,7 +18,7 @@ namespace ProgramminBlog
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.InstallServicesFromAssembly(this.Configuration);
+            services.InstallServices(this.Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

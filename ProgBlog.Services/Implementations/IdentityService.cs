@@ -1,5 +1,10 @@
-﻿using ProgBlog.Services.Interfaces;
+﻿using Microsoft.IdentityModel.Tokens;
+using ProgBlog.Services.Exceptions.UserCredentialsExceptions;
+using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.IdentityManagment;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProgBlog.Services.Implementations
@@ -8,11 +13,13 @@ namespace ProgBlog.Services.Implementations
     {
         private readonly IUserManager userManager;
         private readonly IEmailSender emailSender;
+        private readonly TokenValidationParameters tokenValidationParameters;
 
-        public IdentityService(IUserManager userManager, IEmailSender emailSender)
+        public IdentityService(IUserManager userManager, IEmailSender emailSender, TokenValidationParameters parameters)
         {
             this.userManager = userManager;
             this.emailSender = emailSender;
+            this.tokenValidationParameters = parameters;
         }
 
         public async Task<AuthenticationResult> RegisterAsync(RegisterUserRequest registerRequest)
@@ -25,13 +32,30 @@ namespace ProgBlog.Services.Implementations
             return await this.userManager.LoginAsync(loginRequest);
         }
 
-        public async Task ChangePasswordAsync(ChangePasswordRequest changePassword)
+        public async Task ResetPasswordAsync(ResetPasswordRequest resetPassword)
         {
             string newPassword = this.GenerateNewPassword();
-            await this.userManager.ChangePasswordAsync(changePassword, newPassword);
+            var credentials = await this.userManager.GetByLoginAsync(resetPassword.Login);
+            if (credentials.Email != resetPassword.Email)
+            {
+                throw new DifferentEmailsException();
+            }
 
-            var message = this.GenerateMessage(changePassword.Email, newPassword);
+            await this.userManager.ChangePasswordAsync(resetPassword.Login, newPassword);
+
+            var message = this.GenerateMessage(resetPassword.Email, newPassword);
             this.emailSender.SendMail(message);
+        }
+
+        public async Task ChangePasswordAsync(ChangePasswordRequest changePassword)
+        {
+            var credentials = await this.userManager.GetByLoginAsync(changePassword.Login);
+            if (changePassword.OldPassword != credentials.Password)
+            {
+                throw new DifferentPasswordsException();
+            }
+
+            await this.userManager.ChangePasswordAsync(changePassword.Login, changePassword.NewPassword);
         }
 
         private Message GenerateMessage(string email, string content)
@@ -46,48 +70,6 @@ namespace ProgBlog.Services.Implementations
 
             return message;
         }
-
-        //private AuthenticationResult AuthenticateUser(UserCredentials credentials)
-        //{
-        //    var identity = this.GetIdentity(credentials);
-        //    var token = this.GetToken(identity);
-        //    return new AuthenticationResult
-        //    {
-        //        Id = credentials.Id,
-        //        Token = token
-        //    };
-        //}
-
-        //private ClaimsIdentity GetIdentity(UserCredentials credentials)
-        //{
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Name, credentials.Id),
-        //        new Claim(ClaimTypes.Role, credentials.Role)
-        //    };
-
-        //    ClaimsIdentity claimsIdentity = new ClaimsIdentity(
-        //        claims,
-        //        "Token",
-        //        ClaimTypes.Name,
-        //        ClaimTypes.Role);
-
-        //    return claimsIdentity;
-        //}
-
-        //private string GetToken(ClaimsIdentity identity)
-        //{
-        //    var now = DateTime.UtcNow;
-        //    var jwt = new JwtSecurityToken(
-        //            notBefore: now,
-        //            claims: identity.Claims,
-        //            expires: now.Add(TimeSpan.FromMinutes(2)),
-        //            signingCredentials: new SigningCredentials(this.jwtSetting.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
-        //    var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-        //    const string bearer = "Bearer ";
-
-        //    return bearer + encodedJwt;
-        //}
 
         private string GenerateNewPassword()
         {

@@ -6,7 +6,6 @@ namespace ProgBlog.Services.Models.CommentManagment
     {
         public CreateCommentRequestValidator()
         {
-            this.RuleFor(c => c.UserId).NotEmpty();
             this.RuleFor(c => c.Text)
                 .NotEmpty()
                 .WithMessage("Comment should have some text.")

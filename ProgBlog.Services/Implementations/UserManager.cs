@@ -29,22 +29,10 @@ namespace ProgBlog.Services.Implementations
             this.jwtSettings = jwtSettings;
         }
 
-        //public async Task<UserCredentials> GetByLoginAsync(string login)
-        //{
-        //    return await this.GetUserCredentials(login);
-        //}
-
-        //public async Task<UserCredentials> CreateUserAsync(RegisterUserRequest registerRequest)
-        //{
-        //    var dbUser = this.mapper.Map<DbUser>(registerRequest);
-        //    this.CheckCreateUserConflicts(dbUser);
-        //    const string role = "User";
-        //    dbUser.Role = role;
-        //    dbUser.Articles = new List<string>();
-        //    await this.context.Users.InsertOneAsync(dbUser);
-
-        //    return this.mapper.Map<UserCredentials>(dbUser);
-        //}
+        public async Task<UserCredentials> GetByLoginAsync(string login)
+        {
+            return await this.GetUserCredentials(login);
+        }
 
         public async Task<AuthenticationResult> RegisterAsync(RegisterUserRequest registerRequest)
         {
@@ -70,13 +58,13 @@ namespace ProgBlog.Services.Implementations
             return this.AuthenticateUser(credentials);
         }
 
-        public async Task ChangePasswordAsync(ChangePasswordRequest changePassword, string newPassword)
+        public async Task ChangePasswordAsync(string login, string newPassword)
         {
-            var dbUserCursor = await this.context.Users.FindAsync(u => u.Login == changePassword.Login);
-            var dbUser = dbUserCursor.First();
-            if (dbUser.Email != changePassword.Email)
+            var dbUserCursor = await this.context.Users.FindAsync(u => u.Login == login);
+            var dbUser = dbUserCursor.FirstOrDefault();
+            if (dbUser is null)
             {
-                throw new DifferentEmailsException();
+                throw new UserNotFoundException("User with such login not found", "Login");
             }
 
             dbUser.Password = newPassword;
@@ -86,7 +74,12 @@ namespace ProgBlog.Services.Implementations
         private async Task<UserCredentials> GetUserCredentials(string login)
         {
             var dbUserCursor = await this.context.Users.FindAsync(u => u.Login == login);
-            var dbUser = dbUserCursor.First();
+            var dbUser = dbUserCursor.FirstOrDefault();
+            if (dbUser is null)
+            {
+                throw new UserNotFoundException("User with same login not found", "Login");
+            }
+
             return this.mapper.Map<UserCredentials>(dbUser);
         }
 
@@ -106,7 +99,7 @@ namespace ProgBlog.Services.Implementations
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, credentials.Id),
-                new Claim(ClaimTypes.Role, credentials.Role)
+                new Claim(ClaimTypes.Role, credentials.Role),
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(
@@ -124,7 +117,7 @@ namespace ProgBlog.Services.Implementations
             var jwt = new JwtSecurityToken(
                     notBefore: now,
                     claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(2)),
+                    expires: now.Add(this.jwtSettings.TokenLifeTime),
                     signingCredentials: new SigningCredentials(this.jwtSettings.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             const string bearer = "Bearer ";

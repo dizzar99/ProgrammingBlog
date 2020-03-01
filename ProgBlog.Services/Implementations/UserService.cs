@@ -25,18 +25,6 @@ namespace ProgBlog.Services.Implementations
             this.articleService = articleService;
         }
 
-        //public async Task<UserDetails> CreateUserAsync(CreateUserRequest createdUser)
-        //{
-        //    var dbUser = this.mapper.Map<DbUser>(createdUser);
-        //    this.CheckCreateUserConflicts(dbUser);
-        //    const string role = "User";
-        //    dbUser.Role = role;
-        //    dbUser.Articles = new List<string>();
-        //    await this.context.Users.InsertOneAsync(dbUser);
-
-        //    return this.mapper.Map<UserDetails>(dbUser);
-        //}
-
         public async Task<UserDetails> GetUserAsync(string userId)
         {
             var dbUser = await this.GetDbUserAsync(userId);

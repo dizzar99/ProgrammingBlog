@@ -10,6 +10,7 @@ namespace ProgBlog.Services.Mapper
         public CommentManagmentMapper()
         {
             this.CreateMap<CreateCommentRequest, DbComment>()
+                .ForMember(d => d.AuthorId, opt => opt.MapFrom(c => c.UserId))
                 .ForMember(d => d.CreatedDate, opt => opt.MapFrom(c => DateTime.Now));
             this.CreateMap<DbComment, Comment>();
             this.CreateMap<Comment, UpdateCommentRequest>();

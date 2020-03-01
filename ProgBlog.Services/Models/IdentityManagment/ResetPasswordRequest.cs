@@ -4,10 +4,9 @@ using System.Text;
 
 namespace ProgBlog.Services.Models.IdentityManagment
 {
-    public class ChangePasswordRequest
+    public class ResetPasswordRequest
     {
         public string Login { get; set; }
-        public string OldPassword { get; set; }
-        public string NewPassword { get; set; }
+        public string Email { get; set; }
     }
 }

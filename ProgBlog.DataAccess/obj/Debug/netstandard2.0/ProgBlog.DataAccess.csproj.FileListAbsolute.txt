@@ -6,3 +6,6 @@ C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\obj\Debug\netstand
 C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\bin\Debug\netstandard2.0\ProgBlog.DataAccess.pdb
 C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\obj\Debug\netstandard2.0\ProgBlog.DataAccess.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\obj\Debug\netstandard2.0\ProgBlog.DataAccess.pdb
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\bin\Debug\netstandard2.0\ProgBlog.Common.dll
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\bin\Debug\netstandard2.0\ProgBlog.Common.pdb
+C:\Users\User\source\repos\ProgramminBlog\ProgBlog.DataAccess\obj\Debug\netstandard2.0\ProgBlog.DataAccess.csproj.CopyComplete

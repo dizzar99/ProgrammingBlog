@@ -2,11 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using ProgBlog.Common;
 using ProgBlog.Options;
 
-namespace ProgramminBlog.Installers
+namespace ProgramminBlog.DependencyInstallers
 {
-    public class AuthInstaller : IInstaller
+    public class AuthInstaller : IDependencyInstaller
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
@@ -22,6 +23,8 @@ namespace ProgramminBlog.Installers
                 ValidateAudience = false,
                 ValidateIssuer = false
             };
+
+            services.AddSingleton(tokenValidationParameters);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

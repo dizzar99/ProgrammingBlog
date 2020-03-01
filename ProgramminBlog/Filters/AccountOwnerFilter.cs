@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace ProgramminBlog.Filters
 {
-    public class OwnerOrAdminFilter : Attribute, IActionFilter
+    public class AccountOwnerFilter : Attribute, IActionFilter
     {
         public void OnActionExecuted(ActionExecutedContext context)
         {
@@ -16,10 +16,9 @@ namespace ProgramminBlog.Filters
         {
             var claims = context.HttpContext.User.Claims;
             var userId = claims.First(c => c.Type == ClaimTypes.Name).Value;
-            var role = claims.First(c => c.Type == ClaimTypes.Role).Value;
             string key = "userId";
             var userIdFromRequest = (string)context.ActionArguments[key];
-            if(!(role == "admin" || userId == userIdFromRequest))
+            if(userId != userIdFromRequest)
             {
                 throw new AccessDeniedException();
             }
