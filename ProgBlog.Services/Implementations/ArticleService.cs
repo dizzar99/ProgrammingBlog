@@ -16,22 +16,25 @@ namespace ProgBlog.Services.Implementations
     {
         private readonly ApplicationContext context;
         private readonly IMapper mapper;
+        private readonly IArticleCategoryService categoryService;
 
-        public ArticleService(ApplicationContext context, IMapper mapper)
+        public ArticleService(ApplicationContext context, IMapper mapper, IArticleCategoryService categoryService)
         {
             this.context = context;
             this.mapper = mapper;
+            this.categoryService = categoryService;
         }
 
 
         public async Task<ArticleDetails> CreateArticleAsync(CreateArticleRequest created)
         {
+            var category = await this.categoryService.GetCategory(created.CategoryId);
             var dbArticle = this.mapper.Map<DbArticle>(created);
             this.CheckCreateArticleConflicts(dbArticle);
 
             dbArticle.Comments = new List<DbComment>();
             await this.context.Articles.InsertOneAsync(dbArticle);
-
+            await this.categoryService.AddArticleToCategory(category, dbArticle.Id);
             return this.mapper.Map<ArticleDetails>(dbArticle);
         }
 
@@ -96,11 +99,14 @@ namespace ProgBlog.Services.Implementations
 
         public async Task DeleteArticleAsync(string articleId)
         {
-            var result = await this.context.Articles.DeleteOneAsync(a => a.Id == articleId);
-            if (result.DeletedCount == 0)
+            var article = await this.context.Articles.FindOneAndDeleteAsync(a => a.Id == articleId);
+            if (article is null)
             {
                 throw new ArticleNotFoundException();
             }
+
+            var category = await this.categoryService.GetCategory(article.CategoryId);
+            await this.categoryService.DeleteArticleFromCategory(category, articleId);
         }
 
         public async Task DeleteCommentAsync(string articleId, string commentId)
@@ -120,10 +126,17 @@ namespace ProgBlog.Services.Implementations
         public async Task<ArticleDetails> UpdateArticleAsync(string articleId, UpdateArticleRequest updateArticle)
         {
             var article = await this.GetDbArticle(articleId);
+            if(article.CategoryId != updateArticle.CategoryId)
+            {
+                var oldCategory = await this.categoryService.GetCategory(article.CategoryId);
+                await this.categoryService.DeleteArticleFromCategory(oldCategory, articleId);
+            }
+
             this.mapper.Map(updateArticle, article);
             await this.CheckUpdateArticleConflicts(article);
+            var newCategory = await this.categoryService.GetCategory(updateArticle.CategoryId);
             await this.context.Articles.FindOneAndReplaceAsync(a => a.Id == articleId, article);
-
+            await this.categoryService.AddArticleToCategory(newCategory, articleId);
             return this.mapper.Map<ArticleDetails>(article);
         }
 

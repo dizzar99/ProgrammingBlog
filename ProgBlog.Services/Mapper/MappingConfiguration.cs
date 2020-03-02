@@ -12,6 +12,7 @@ namespace ProgBlog.Services.Mapper
                 mc.AddProfile<UserManagmentMapper>();
                 mc.AddProfile<CommentManagmentMapper>();
                 mc.AddProfile<UserCredentialsManagmentMapper>();
+                mc.AddProfile<CategoryManagmentMapper>();
             });
 
             var mapper = mappingConfig.CreateMapper();

@@ -17,6 +17,7 @@ namespace ProgBlog.Services
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IArticleCategoryService, ArticleCategoryService>();
         }
     }
 }
