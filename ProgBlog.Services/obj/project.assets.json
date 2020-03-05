@@ -1892,20 +1892,6 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "ProgBlog.Common/1.0.0": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.0",
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.2",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2"
-        },
-        "compile": {
-          "bin/placeholder/ProgBlog.Common.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/ProgBlog.Common.dll": {}
-        }
-      },
       "ProgBlog.DataAccess/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -1913,8 +1899,7 @@
           "Microsoft.Extensions.DependencyInjection": "3.1.2",
           "Microsoft.Extensions.Options": "3.1.2",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.2",
-          "MongoDB.Driver": "2.10.2",
-          "ProgBlog.Common": "1.0.0"
+          "MongoDB.Driver": "2.10.2"
         },
         "compile": {
           "bin/placeholder/ProgBlog.DataAccess.dll": {}
@@ -6694,11 +6679,6 @@
         "system.xml.xmldocument.nuspec"
       ]
     },
-    "ProgBlog.Common/1.0.0": {
-      "type": "project",
-      "path": "../ProgBlog.Common/ProgBlog.Common.csproj",
-      "msbuildProject": "../ProgBlog.Common/ProgBlog.Common.csproj"
-    },
     "ProgBlog.DataAccess/1.0.0": {
       "type": "project",
       "path": "../ProgBlog.DataAccess/ProgBlog.DataAccess.csproj",
@@ -6713,7 +6693,6 @@
       "MimeKit >= 2.5.1",
       "NETCore.MailKit >= 2.0.2",
       "NETStandard.Library >= 2.0.3",
-      "ProgBlog.Common >= 1.0.0",
       "ProgBlog.DataAccess >= 1.0.0",
       "System.IdentityModel.Tokens.Jwt >= 5.6.0"
     ]
@@ -6748,9 +6727,6 @@
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "C:\\Users\\User\\source\\repos\\ProgramminBlog\\ProgBlog.Common\\ProgBlog.Common.csproj": {
-              "projectPath": "C:\\Users\\User\\source\\repos\\ProgramminBlog\\ProgBlog.Common\\ProgBlog.Common.csproj"
-            },
             "C:\\Users\\User\\source\\repos\\ProgramminBlog\\ProgBlog.DataAccess\\ProgBlog.DataAccess.csproj": {
               "projectPath": "C:\\Users\\User\\source\\repos\\ProgramminBlog\\ProgBlog.DataAccess\\ProgBlog.DataAccess.csproj"
             }

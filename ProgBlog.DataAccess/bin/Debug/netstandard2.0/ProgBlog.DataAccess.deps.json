@@ -13,8 +13,7 @@
           "Microsoft.Extensions.Options": "3.1.2",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "3.1.2",
           "MongoDB.Driver": "2.10.2",
-          "NETStandard.Library": "2.0.3",
-          "ProgBlog.Common": "1.0.0"
+          "NETStandard.Library": "2.0.3"
         },
         "runtime": {
           "ProgBlog.DataAccess.dll": {}
@@ -1150,15 +1149,6 @@
             "fileVersion": "4.6.24702.1"
           }
         }
-      },
-      "ProgBlog.Common/1.0.0": {
-        "dependencies": {
-          "Microsoft.Extensions.Configuration.Abstractions": "3.1.2",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2"
-        },
-        "runtime": {
-          "ProgBlog.Common.dll": {}
-        }
       }
     }
   },
@@ -1874,11 +1864,6 @@
       "sha512": "sha512-SrCOmTvvOOCmJT4BBxdZcwhz6XEMsjBGZvGSVorOxdCznaUNeVotEjDfXGIZ8gcGo00qgPbTV6puHDgcFYl6Iw==",
       "path": "system.threading.threadpool/4.3.0",
       "hashPath": "system.threading.threadpool.4.3.0.nupkg.sha512"
-    },
-    "ProgBlog.Common/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

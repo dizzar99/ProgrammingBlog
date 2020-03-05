@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using ProgBlog.DataAccess;
 using ProgBlog.DataAccess.Models;
+using ProgBlog.Services.Exceptions.CategoryServiceExceptions;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.ArticleCategoryManagment;
 using System;
@@ -62,7 +63,7 @@ namespace ProgBlog.Services.Implementations
         public async Task<CategoryDetails> UpdateCategory(string id, CreateCategoryRequest updateRequest)
         {
             var dbCategory = await this.GetDbCategory(id);
-            await this.CheckUpdateCategoryConflictsAsync(dbCategory);
+            await this.CheckCategoryConflictsAsync(dbCategory);
             this.mapper.Map(updateRequest, dbCategory);
             await this.context.Categories.FindOneAndReplaceAsync(c => c.Id == id, dbCategory);
             return this.mapper.Map<CategoryDetails>(dbCategory);
@@ -89,19 +90,7 @@ namespace ProgBlog.Services.Implementations
             var categoriesWithSameName = cursor.ToList();
             if (categoriesWithSameName.Count != 0)
             {
-                // TODO
-                throw new Exception();
-            }
-        }
-
-        private async Task CheckUpdateCategoryConflictsAsync(DbArticleCategory dbCategory)
-        {
-            var cursor = await this.context.Categories.FindAsync(c => c.Name == dbCategory.Name && c.Id != dbCategory.Id);
-            var categoriesWithSameName = cursor.ToList();
-            if (categoriesWithSameName.Count != 0)
-            {
-                // TODO
-                throw new Exception();
+                throw new CategoryNameConflictException();
             }
         }
 
@@ -111,8 +100,7 @@ namespace ProgBlog.Services.Implementations
             var dbCategory = dbCategoryCursor.FirstOrDefault();
             if (dbCategory is null)
             {
-                // TODO
-                throw new Exception();
+                throw new CategoryNotFoundException();
             }
 
             return dbCategory;

@@ -129,8 +129,6 @@ C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\NETCore.MailKit.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\BouncyCastle.Crypto.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.Abstractions.dll
-C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\ProgBlog.Common.dll
-C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\ProgBlog.Common.pdb
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.Binder.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgramminBlog\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll

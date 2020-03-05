@@ -11,8 +11,4 @@
     <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ProgBlog.Common\ProgBlog.Common.csproj" />
-  </ItemGroup>
-
 </Project>

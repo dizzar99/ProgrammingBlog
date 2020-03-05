@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ProgBlog.Common;
 using ProgBlog.Options;
 
 namespace ProgramminBlog.DependencyInstallers
@@ -23,8 +22,6 @@ namespace ProgramminBlog.DependencyInstallers
                 ValidateAudience = false,
                 ValidateIssuer = false
             };
-
-            services.AddSingleton(tokenValidationParameters);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

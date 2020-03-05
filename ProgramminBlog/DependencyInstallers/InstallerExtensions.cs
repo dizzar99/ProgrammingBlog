@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProgBlog.Common;
-using ProgBlog.DataAccess;
-using ProgBlog.Services;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace ProgramminBlog.DependencyInstallers
 {
@@ -11,14 +9,10 @@ namespace ProgramminBlog.DependencyInstallers
     {
         public static void InstallServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var installers = new List<IDependencyInstaller>
-            {
-                new ServicesDependencyRegistrationModule(),
-                new DataAccessDependencyRegistrationModule(),
-                new AuthInstaller(),
-                new WebApiInstaller()
-            };
-
+            var installers = typeof(Startup).Assembly.ExportedTypes.Where(t => typeof(IDependencyInstaller).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+                .Select(Activator.CreateInstance)
+                .Cast<IDependencyInstaller>()
+                .ToList();
             installers.ForEach(installer => installer.InstallServices(services, configuration));
         }
     }

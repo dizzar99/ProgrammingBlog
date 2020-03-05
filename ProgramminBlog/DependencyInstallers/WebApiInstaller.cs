@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using ProgBlog.Common;
 using ProgBlog.Services.Models.ArticleManagment;
 using System;
 using System.Collections.Generic;

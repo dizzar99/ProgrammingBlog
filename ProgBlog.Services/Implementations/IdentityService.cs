@@ -13,13 +13,11 @@ namespace ProgBlog.Services.Implementations
     {
         private readonly IUserManager userManager;
         private readonly IEmailSender emailSender;
-        private readonly TokenValidationParameters tokenValidationParameters;
 
-        public IdentityService(IUserManager userManager, IEmailSender emailSender, TokenValidationParameters parameters)
+        public IdentityService(IUserManager userManager, IEmailSender emailSender)
         {
             this.userManager = userManager;
             this.emailSender = emailSender;
-            this.tokenValidationParameters = parameters;
         }
 
         public async Task<AuthenticationResult> RegisterAsync(RegisterUserRequest registerRequest)

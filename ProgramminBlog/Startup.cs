@@ -19,10 +19,21 @@ namespace ProgramminBlog
         public void ConfigureServices(IServiceCollection services)
         {
             services.InstallServices(this.Configuration);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("name",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyMethod();
+                        builder.AllowAnyHeader();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("name");
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

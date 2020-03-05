@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProgBlog.Services.Interfaces;
 using ProgBlog.Services.Models.IdentityManagment;
@@ -54,11 +55,16 @@ namespace ProgramminBlog.Controllers
         }
 
         [HttpPost("changepassword")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task ChangePasswordAsync(ChangePasswordRequest changePassword)
         {
             await this.identityService.ChangePasswordAsync(changePassword);
         }
+
+        [HttpPost("check")]
+        [Authorize]
+        public void Check() { }
     }
 }

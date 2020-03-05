@@ -9,5 +9,3 @@ C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandar
 C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.csproj.CopyComplete
 C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.dll
 C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\obj\Debug\netstandard2.0\ProgBlog.Services.pdb
-C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.Common.dll
-C:\Users\User\source\repos\ProgramminBlog\ProgBlog.Services\bin\Debug\netstandard2.0\ProgBlog.Common.pdb
